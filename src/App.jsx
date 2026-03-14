@@ -7,9 +7,6 @@ const TEAM_PASSWORD = "Bluetik123";
 
 const [authenticated, setAuthenticated] = useState(false);
 const [password, setPassword] = useState("");
-const [messages, setMessages] = useState([]);
-const [input, setInput] = useState("");
-const [loading, setLoading] = useState(false);
 
 useEffect(() => {
 const auth = localStorage.getItem("team_auth");
@@ -32,56 +29,9 @@ localStorage.removeItem("team_auth");
 location.reload();
 };
 
-const sendMessage = async () => {
-
-if (!input) return;
-
-const userMessage = { role: "user", content: input };
-
-setMessages([...messages, userMessage]);
-setInput("");
-setLoading(true);
-
-try {
-
-const response = await fetch("/api/generate", {
-method: "POST",
-headers: {
-"Content-Type": "application/json"
-},
-body: JSON.stringify({
-prompt: input
-})
-});
-
-const data = await response.json();
-
-const aiMessage = {
-role: "assistant",
-content: data.response || "No response"
-};
-
-setMessages(prev => [...prev, aiMessage]);
-
-} catch (error) {
-
-const aiMessage = {
-role: "assistant",
-content: "AI server not connected."
-};
-
-setMessages(prev => [...prev, aiMessage]);
-
-}
-
-setLoading(false);
-
-};
-
 if (!authenticated) {
 return (
 <div className="login-container">
-
 <div className="login-card">
 
 <h1>Strategy AI</h1>
@@ -99,48 +49,67 @@ Access Dashboard
 </button>
 
 </div>
-
 </div>
 );
 }
 
 return (
 
-<div className="app-container">
+<div className="dashboard">
 
-<div className="header">
+<header className="dashboard-header">
 
-<h2>Strategy AI</h2>
+<h2>Strategy AI Dashboard</h2>
 
 <button className="logout-btn" onClick={logout}>
 Logout
 </button>
 
-</div>
+</header>
 
-<div className="chat-container">
+<div className="dashboard-content">
 
-{messages.map((msg,index)=>(
-<div key={index} className={`message ${msg.role}`}>
-{msg.content}
-</div>
-))}
+<div className="card">
 
-{loading && <div className="message assistant">Generating strategy...</div>}
+<h3>Generate Marketing Strategy</h3>
 
-</div>
+<p>
+Enter details about the business and generate a full marketing strategy.
+</p>
 
-<div className="input-area">
-
-<input
-value={input}
-onChange={(e)=>setInput(e.target.value)}
-placeholder="Ask for a marketing strategy..."
-/>
-
-<button onClick={sendMessage}>
-Send
+<button className="primary-btn">
+Generate Strategy
 </button>
+
+</div>
+
+<div className="card">
+
+<h3>Content Kit Generator</h3>
+
+<p>
+Create social media posts, captions, and campaign ideas instantly.
+</p>
+
+<button className="primary-btn">
+Generate Content Kit
+</button>
+
+</div>
+
+<div className="card">
+
+<h3>Campaign Ideas</h3>
+
+<p>
+Generate creative campaign ideas tailored for your audience.
+</p>
+
+<button className="primary-btn">
+Generate Campaign
+</button>
+
+</div>
 
 </div>
 
