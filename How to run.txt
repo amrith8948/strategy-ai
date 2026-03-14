@@ -1,0 +1,5 @@
+open src folder and app.js in vs code
+
+get terminal to  strategy-ai folder
+
+bash - npm run dev
